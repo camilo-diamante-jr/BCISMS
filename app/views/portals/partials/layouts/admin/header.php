@@ -1,4 +1,5 @@
-<?php //checkSession("Admin"); 
+<?php
+checkSession("Admin");
 ?>
 
 <!DOCTYPE html>

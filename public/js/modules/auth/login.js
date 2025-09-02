@@ -1,6 +1,12 @@
 let currentToast = null; // To track active toast
 
 $(document).ready(function () {
+	// Load email from localStorage if available
+	const savedEmail = localStorage.getItem("loginEmail");
+	if (savedEmail) {
+		$("#email").val(savedEmail);
+	}
+
 	initiateLogin();
 });
 
@@ -15,6 +21,9 @@ function initiateLogin() {
 			showToast("Email and password are required.", "error");
 			return;
 		}
+
+		// Save email to localStorage
+		localStorage.setItem("loginEmail", email);
 
 		checkValidation(email, password);
 	});
@@ -42,7 +51,6 @@ function checkValidation(email, password) {
 }
 
 function showToast(message, type) {
-	// Dismiss previous toast
 	if (currentToast) {
 		currentToast.hideToast();
 	}

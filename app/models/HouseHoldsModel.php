@@ -1,7 +1,7 @@
 <?php
 
 
-class StudentListModel
+class HouseholdsModel
 {
     private $pdo;
 
@@ -10,9 +10,9 @@ class StudentListModel
         $this->pdo = $pdo;
     }
 
-    public function fetchStudents()
+    public function fetchHouseholds()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM students");
+        $stmt = $this->pdo->prepare("SELECT * FROM households");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

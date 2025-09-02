@@ -6,19 +6,14 @@ require_once '../core/Controller.php';
 class AdminPortalController extends Controller
 {
 
-    // private $notificationModel;
-    // private $transactionModel;
-    // private $sectionModel;
-    private $appointmentModel;
-    private $studentListModel;
+    private $residentsModel;
 
 
     public function __construct($pdo)
     {
         parent::__construct($pdo);
-        // $this->notificationModel = $this->loadModel("NotificationModel");
-        $this->appointmentModel = $this->loadModel("AppointmentModel");
-        $this->studentListModel = $this->loadModel("StudentListModel");
+
+        $this->residentsModel = $this->loadModel("ResidentsModel");
     }
 
     public function viewAdminDashboard()
@@ -36,18 +31,18 @@ class AdminPortalController extends Controller
     
     */
 
-    public function viewAppointments()
+    public function viewResidents()
     {
 
-        $appointments = $this->appointmentModel->fetchAppointments();
+        $residents = $this->residentsModel->fetchResidents();
         $data = [
-            'contentHeaderTitle' => 'Appointments',
-            'breadcrumbActiveItem' => 'Appointments',
-            'appointments' => $appointments
+            'contentHeaderTitle' => 'Residents',
+            'breadcrumbActiveItem' => 'Residents',
+            'residents' => $residents
 
 
         ];
-        $this->renderView('/portals/admin/management/appointments/appointment', $data);
+        $this->renderView('/portals/admin/management/residents/residents', $data);
     }
 
 
@@ -57,30 +52,4 @@ class AdminPortalController extends Controller
     METHODS  TO VIEW STUDENTS 
     
     */
-    public function viewStudents()
-    {
-        // $students = $this->studentListModel->fetchStudents();
-        $data = [
-            'contentHeaderTitle' => 'Students',
-            'breadcrumbActiveItem' => 'Students',
-            // 'students' => $students
-        ];
-        $this->renderView('/portals/admin/management/students/student', $data);
-    }
-
-    /* 
-
-    METHODS  TO VIEW COURSES 
-    
-    */
-
-
-    public function viewCourses()
-    {
-        $data = [
-            'contentHeaderTitle' => 'Courses',
-            'breadcrumbActiveItem' => 'Courses',
-        ];
-        $this->renderView('/portals/admin/management/courses/course', $data);
-    }
 }

@@ -17,7 +17,7 @@ class LoginModel
     {
         try {
             // Check for 'active' or 'inactive' status
-            $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = ? ");
+            $stmt = $this->pdo->prepare("SELECT * FROM user_account WHERE email = ? ");
             $stmt->execute([$email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

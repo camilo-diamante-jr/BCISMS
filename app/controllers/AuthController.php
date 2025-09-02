@@ -8,36 +8,68 @@ class AuthController extends Controller
     {
         parent::__construct($pdo);
         $this->loginModel = $this->loadModel("LoginModel");
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start(); // Ensure session is started
+        }
     }
 
     public function viewLogin()
     {
         $this->renderView("/auth/login");
     }
+
+
     public function loginAuthentication()
     {
         header('Content-Type: application/json');
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $email = htmlspecialchars(trim($_POST['email']));
-            $password = htmlspecialchars(trim($_POST['password']));
+            $email = htmlspecialchars(trim($_POST['email'] ?? ''));
+            $password = htmlspecialchars(trim($_POST['password'] ?? ''));
 
             $result = $this->loginModel->login($email, $password);
 
-            if (isset($result['success']) && $result['success']) {
-                $_SESSION['user_id'] = $result['user_id'];
-                $_SESSION['email'] = $result['email'];
+            $response = [];
+
+            if (isset($result['success']) && $result['success'] === true) {
+                $_SESSION['user_id']  = $result['user_id'];
+                $_SESSION['email']    = $result['email'];
                 $_SESSION['userType'] = $result['userType'];
 
-                echo json_encode(['success' => true, 'userType' => $result['userType']]);
-                exit;
+                $response = [
+                    'status' => 'success',
+                    'message' => 'Login successful',
+                    'userType' => $result['userType']
+                ];
             } else {
-
-                echo json_encode($result);
-                exit;
+                $response = [
+                    'status' => 'error',
+                    'message' => $result['message'] ?? 'Login failed'
+                ];
             }
+
+            // Always send clean JSON
+            echo json_encode($response);
+            exit;
         } else {
-            require '../app/views/authentications/login.php';
+            require '../app/views/auth/login.php';
         }
+    }
+
+
+
+    public function logout()
+    {
+        // Unset all session variables
+        $_SESSION = [];
+
+        // Destroy session
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
+
+        // Redirect to login page
+        header("Location: /login");
+        exit;
     }
 }
