@@ -7,6 +7,7 @@ class AdminPortalController extends Controller
 {
 
     private $residentsModel;
+    private $recentActivityModel;
 
 
     public function __construct($pdo)
@@ -14,13 +15,16 @@ class AdminPortalController extends Controller
         parent::__construct($pdo);
 
         $this->residentsModel = $this->loadModel("ResidentsModel");
+        $this->recentActivityModel  = $this->loadModel("RecentActivityModel");
     }
 
     public function viewAdminDashboard()
     {
+        $recentActivities = $this->recentActivityModel->fetchRecentRecentActivities();
         $data = [
             'contentHeaderTitle' => 'Dashboard',
             'breadcrumbActiveItem' => 'Dashboard',
+            'recentActivities' => $recentActivities
         ];
         $this->renderView('/portals/admin/admin-dashboard', $data);
     }

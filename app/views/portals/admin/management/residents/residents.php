@@ -8,12 +8,12 @@ $this->renderView('/portals/partials/layouts/admin/header', $data);
             <!-- Page Header -->
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Appointments</h1>
+                    <h1 class="m-0"><?= $contentHeaderTitle ?></h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Appointments</li>
+                        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+                        <li class="breadcrumb-item active"><?= $breadcrumbActiveItem ?></li>
                     </ol>
                 </div>
             </div>
@@ -23,58 +23,62 @@ $this->renderView('/portals/partials/layouts/admin/header', $data);
                 <div class="card elevation-4">
                     <header class="card-header bg-white">
                         <div class="d-flex align-items-center justify-content-between">
-                            <h5 class="mb-0">List of Guidance Office Appointments</h5>
+                            <h5 class="mb-0">List of Residence</h5>
 
                         </div>
                     </header>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table id="appointmentsTable" class="table table-bordered table-striped">
-                                <thead class="table-light">
+                            <table class="table">
+                                <thead>
                                     <tr>
-                                        <th>No.</th>
-                                        <th>Student Name</th>
-                                        <th>Appointment Date</th>
-                                        <th>Time</th>
-                                        <th>Purpose</th>
-                                        <th>Guidance Counselor</th>
+                                        <th>Name</th>
+                                        <th>Age</th>
+                                        <th>Sitio</th>
+                                        <th>Phone</th>
+                                        <th>Household</th>
                                         <th>Status</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
-                                    <?php foreach ($appointments as $index => $appointment) : ?>
-                                        <tr>
-                                            <td><?= $index + 1 ?></td>
-                                            <td><?= htmlspecialchars($appointment['student_name']) ?></td>
-                                            <td><?= date('F d, Y', strtotime($appointment['appointment_date'])) ?></td>
-                                            <td><?= date('h:i A', strtotime($appointment['time'])) ?></td>
-                                            <td><?= htmlspecialchars($appointment['purpose']) ?></td>
-                                            <td><?= htmlspecialchars($appointment['counselor']) ?></td>
-                                            <td>
-                                                <?php
-                                                $status = $appointment['status'];
-                                                $badgeClass = '';
+                                    <?php foreach ($residents as $resident) : ?>
+                                        <td>
+                                            <?= $resident['firstName'] . $resident['lastName'] ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            $birthdate = $resident['date_of_birth'];
 
-                                                switch (strtolower($status)) {
-                                                    case 'pending':
-                                                        $badgeClass = 'badge badge-warning';
-                                                        break;
-                                                    case 'completed':
-                                                        $badgeClass = 'badge badge-success';
-                                                        break;
-                                                    case 'cancelled':
-                                                        $badgeClass = 'badge badge-danger';
-                                                        break;
-                                                    default:
-                                                        $badgeClass = 'badge badge-secondary';
-                                                        break;
-                                                }
-                                                ?>
-                                                <span class="<?= $badgeClass ?>"><?= htmlspecialchars($status) ?></span>
-                                            </td>
+                                            $today = new DateTime();
+                                            $birthDate = DateTime::createFromFormat("m-d-Y", $birthdate);
+                                            $age = $today->diff($birthDate)->y;
 
+                                            echo $age;
+                                            ?>
 
-                                        </tr>
+                                        </td>
+                                        <td><?= $resident['sitio'] ?></td>
+                                        <td><?= $resident['phone'] ?></td>
+                                        <td><?= $resident['household'] ?></td>
+                                        <td>
+                                            <?php
+                                            $status = $resident['status'];
+
+                                            switch ($status) {
+                                                case "active":
+                                                    echo "<p class='text-center bg-success rounded-pill'>$status</p>";
+                                                    break;
+                                            }
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <a href=""> <i class="fa fa-eye me-3"></i> </a>
+                                            <a href=""> <i class="fa fa-edit me-3"></i> </a>
+                                            <a href=""> <i class="fa fa-archive me-3"></i> </a>
+                                        </td>
+
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -90,6 +94,15 @@ $this->renderView('/portals/partials/layouts/admin/header', $data);
 
 <script>
     $(document).ready(function() {
-        $('#appointmentsTable').DataTable();
+        // $('#appointmentsTable').DataTable();
+        $('.fa-eye').hover(function() {
+            $(this).toggleClass("text-cyan");
+        });
+        $('.fa-edit').hover(function() {
+            $(this).toggleClass("text-success");
+        });
+        $('.fa-archive').hover(function() {
+            $(this).toggleClass("text-danger");
+        });
     });
 </script>

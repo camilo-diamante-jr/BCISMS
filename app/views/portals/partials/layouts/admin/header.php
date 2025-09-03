@@ -1,5 +1,5 @@
 <?php
-checkSession("Admin");
+// checkSession("Admin");
 ?>
 
 <!DOCTYPE html>
